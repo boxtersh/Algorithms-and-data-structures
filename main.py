@@ -6,6 +6,8 @@ def output_minimum_number_greatest_repetition(array: list[int]) -> int:
     Пример:
     [1,1,3,3,3,2,2,5,5,5,5] ответ 5
     [1,1,3,3,3,3,2,2,5,5,5,5] ответ 3
+    [1,2,3,4] ответ 1
+    [] ответ - 1
     :param array: Список целых чисел
     :return: минимальное число из списка с максимальным количеством повторений
     """
@@ -60,12 +62,3 @@ def output_minimum_number_greatest_repetition(array: list[int]) -> int:
             min = key
 
     return min
-
-
-print(output_minimum_number_greatest_repetition([9,4,7,1,5,3,5,9,2,8]))
-
-
-
-
-
-
