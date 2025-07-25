@@ -1,4 +1,5 @@
 import pytest
+import datetime
 import main
 
 @pytest.mark.parametrize('lst, expected',
@@ -165,3 +166,96 @@ def test_palindrome_argument_not_class_int():
 
     with pytest.raises(TypeError):
         main.palindrome(1.3)
+
+
+# ******** Задание №5 ***********************************************************************
+
+def test_positive_transformations_to_date_visiting():
+
+    expected = [[datetime.date.fromisoformat('2023-01-01'),150]]
+    res = main.__transformations_to_date_visiting(['2023-01-01,150'])
+
+    assert res == expected, f'Ожидали: {expected} получили:{res}'
+
+
+def test_transformations_empty_list():
+
+    with pytest.raises(ValueError):
+        main.__transformations_to_date_visiting([])
+
+
+def tets_transformations_not_class_list():
+
+    with pytest.raises(TypeError):
+        main.__transformations_to_date_visiting(5)
+
+def test_data_inconsistency_in_list_int():
+
+    with pytest.raises(ValueError):
+        main.__transformations_to_date_visiting(['2023-01-01,1.50'])
+
+
+def test_data_inconsistency_in_list_datetime():
+
+    with pytest.raises(ValueError):
+        main.__transformations_to_date_visiting(['2023-01+01,150'])
+
+
+def test_axis_value_positive():
+
+     array = [[datetime.date.fromisoformat('2023-01-01'),150]]
+     expected = [1],[150]
+
+     res = main.__axis_value(array)
+
+     assert res == expected, f'Ожидали: {expected} получили:{res}'
+
+
+def test__max_visiting_to_month():
+
+    array = [[datetime.date.fromisoformat('2023-01-01'), 150]]
+    expected = {1:150}, 150
+
+    res = main.__max_visiting_to_month(array)
+
+    assert res == expected, f'Ожидали: {expected} получили:{res}'
+
+
+def test__max_visiting_to_day():
+
+    array = [[datetime.date.fromisoformat('2023-01-01'), 150]]
+    expected = {6:150}, 150
+
+    res = main.__max_visiting_to_day(array)
+
+    assert res == expected, f'Ожидали: {expected} получили:{res}'
+
+
+def test_display_visiting_to_month():
+
+    array = [[datetime.date.fromisoformat('2023-01-01'), 150]]
+    expected = None
+
+    res = main.display_visiting_to_month(array)
+
+    assert res == expected, f'Ожидали: {expected} получили:{res}'
+
+
+def test_display_visiting_to_day():
+
+    array = [[datetime.date.fromisoformat('2023-01-01'), 150]]
+    expected = None
+
+    res = main.display_visiting_to_day(array)
+
+    assert res == expected, f'Ожидали: {expected} получили:{res}'
+
+
+def test_data_graph():
+
+    array = ['2023-01-01,150']
+    expected = None
+
+    res = main.data_graph(array)
+
+    assert res == expected, f'Ожидали: {expected} получили:{res}'

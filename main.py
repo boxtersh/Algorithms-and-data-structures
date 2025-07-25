@@ -1,4 +1,5 @@
 import datetime
+
 import matplotlib.pyplot as plt
 # ******** classroom work **************************************************************
 
@@ -208,8 +209,8 @@ def palindrome(x: int) -> bool:
 
 # ******** Задание №5 ***********************************************************************
 
-with open('SQL.txt') as file:
-    array = file.readlines()
+# with open('SQL.txt') as file:
+#     array = file.readlines()
 
 dec_day = {0:'Понедельник',
            1:'Вторник',
@@ -234,30 +235,44 @@ dec_month = {1:'январь',
 
 def __transformations_to_date_visiting(array: list[str]) -> list[list]:
     """
-    Функция преобразует данные массива array из строки
+    Функция преобразует данные из файла массива array из строки
     в список из объектов класса datatime и int
     :param array: массив строк '2023-10-15, 251'
     :return: list[[datatime, int]]
     """
-    new_row = []
+    if not isinstance(array, list):
+        raise TypeError(f'Не соответствие типа входных данных ожидалось class: list')
+
+    if not array:
+        raise ValueError(f'Список данных пустой')
+
     tsf_array = []
 
     for row in array:
+        try:
+            datetime.datetime.strptime(row[:10], '%Y-%m-%d')
+
+        except ValueError:
+            raise ValueError(f'Неверный формат даты в строке: {row}, ожидалось год-месяц-дата')
+
         row = row.split(',')
         data = datetime.date.fromisoformat(row[0])
+
+        if not row[1].rstrip().isdigit():
+            raise ValueError(f'Неверный формат "посещения" в строке: {row}, ожидалось целое число')
+
         visiting = int(row[1])
-        new_row.append([data,visiting])
-        tsf_array = new_row
+        tsf_array.append([data,visiting])
 
     return tsf_array
 
 
 def __axis_value(tsf_array: list[list]):
     """
-    Функция создает два списка из массива tsf_array разделяя строку [datatime, int]
-    на список [datatime, int] и список [int]
+    Функция создает два списка координат X Y. Из массива tsf_array [datatime, int]
+    получаем список посещений [int] - координата Y  и список [int] (порядковые номера дат) координата Х
     :param tsf_array: list[[datatime, int]]
-    :return: Два списка [int] и список [int]
+    :return: Два списка [int]
     """
     lst_data = [1]
     lst_visiting = [tsf_array[0][1]]
@@ -307,11 +322,12 @@ def __max_visiting_to_month(tsf_array: list[list]):
 def __max_visiting_to_day(tsf_array: list[list]):
     """
     Функция создает из массива tsf_array словарь
-    данных - день недели (ключ) сумма посещений за такие же дни (значение)
-    и максимум посещений за день за весь период
+    данных - день недели (ключ) сумма посещений за аналогичные дни (значение)
+    и максимум от суммы посещений за аналогичные дни - за весь период
     Пример:
     [[2023-01-01,150], [2023-01-02,200], [2023-01-03,250]]
-    ответ {1: 600}, 750
+    все понедельники - 613, вторники - 543, среды - 750 ... максимум = 750
+    ответ {0: 613, 1: 543, 2: 750}, 750
     :param tsf_array: list[[datatime, int]]
     :return: словарь и максимум посещений за день за весь период
     """
@@ -338,8 +354,11 @@ def __max_visiting_to_day(tsf_array: list[list]):
 
 def display_visiting_to_month(tsf_array: list[list]) -> None:
     """
-    Функция из массива выводит на экран
-    словарь помесячного посещения сайта
+    Функция из массива tsf_array выводит на экран упорядочный
+    словарь по убыванию посещений сайта по месяцам
+    Пример:
+    январь       - 6630,   100% от максимума
+    февраль      - 6543,    99% от максимума
     :param tsf_array: list[[datatime, int]]
     """
 
@@ -352,8 +371,16 @@ def display_visiting_to_month(tsf_array: list[list]) -> None:
 
 def display_visiting_to_day(tsf_array: list[list]) -> None:
     """
-    Функция из массива выводит на экран
-    словарь посещений сайта по дням недели
+    Функция из массива tsf_array выводит на экран упорядочный
+    словарь по убыванию посещений сайта по дням недели
+    Пример:
+    Воскресенье  - 2130,   100% от максимума
+    Вторник      - 2013,    95% от максимума
+    Понедельник  - 2000,    94% от максимума
+    Суббота      - 1910,    90% от максимума
+    Пятница      - 1840,    86% от максимума
+    Четверг      - 1790,    84% от максимума
+    Среда        - 1490,    70% от максимума
     :param tsf_array: list[[datatime, int]]
     """
     dec_sum_day, max_visiting = __max_visiting_to_day(tsf_array)
@@ -363,7 +390,7 @@ def display_visiting_to_day(tsf_array: list[list]) -> None:
         print(f'{dec_day[key]:12} - {dec_sum_day[key]}, {round(100*dec_sum_day[key]/max_visiting):5}% от максимума')
 
 
-def data_graph(array):
+def data_graph(array) -> None:
     """
     Функция из массива выводит на экран
     график посещений сайта по дням за весь период для удобной визуализации
