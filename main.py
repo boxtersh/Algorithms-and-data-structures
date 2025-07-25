@@ -1,7 +1,26 @@
 import datetime
 
 import matplotlib.pyplot as plt
+
 # ******** classroom work **************************************************************
+def __check_int(number) -> None:
+
+    if not isinstance(number, int):
+
+        raise TypeError('Число не класса int')
+
+
+def __check_list(array: list) -> None:
+
+    if not isinstance(array, list):
+        raise TypeError(f'Не соответствие типа входных данных ожидалось class: list')
+
+
+def __check_list_empty(array: list) -> None:
+
+    if not array:
+        raise ValueError(f'Список данных пустой')
+
 
 def output_minimum_number_greatest_repetition(array: list[int] = None) -> int:
     """
@@ -69,15 +88,51 @@ def output_minimum_number_greatest_repetition(array: list[int] = None) -> int:
     return min
 
 
+def task_N3(array: list, b: int) -> list[list]:
+    """
+    Функция принимает список array с ограничением длинны 2 <= array <= 104
+    и значений в нем -109 <= array[i] <= 109, а так же целое число В
+    с ограничением -109 <= В <= 109 и возвращает индексы уникальных комбинаций вида
+    по условию array[i] + array[j] = В, i и j индексы одного уровня, но i <> j
+    Пример:
+    [0, 3, 0, 2, 1, 3, 0, 2, 1] B = 3
+    ответ: [[0, 1], [2, 5], [3, 4], [7, 8]]
+
+    []1,2,3,4,5] B = 7
+    ответ: [[-1, -1]]
+    :param array: список чисел по условию
+    :return: список индексов значение чисел массива которых в сумме дает число В [i, i+n]
+    """
+    __check_list(array)
+
+    if 2 > len(array) or len(array) > 104:
+        raise ValueError(f'Список должен удовлетворять условию 2 <= array <= 104')
+
+    __check_int(b)
+
+    if -109 > b or b > 109:
+        raise ValueError(f'Число B должно удовлетворять условию -109 <= В <= 109')
+
+    mass = array.copy()
+    res = []
+
+    for i in range(len(mass)):
+        for j in range(len(mass)):
+            if mass[i] + mass[j] == b:
+                if i != j:
+                    if not [mass[i], mass[j]] in res or not [mass[j], mass[i]] in res:
+                        res.append([i, j])
+                        mass[i] = b + 0.1
+                        mass[j] = b + 0.1
+
+    if not res:
+        res = [[-1, -1]]
+
+    return res
+
+
 # ******** Модуль №5. *********        ************         *************         ***********
 # ******** Задание №1 ***********************************************************************
-
-def __check_int(number) -> None:
-
-    if not isinstance(number, int):
-
-        raise TypeError('Число не класса int')
-
 
 def factorial(n: int) -> int:
     """
@@ -209,8 +264,8 @@ def palindrome(x: int) -> bool:
 
 # ******** Задание №5 ***********************************************************************
 
-# with open('SQL.txt') as file:
-#     array = file.readlines()
+with open('SQL.txt') as file:
+    array = file.readlines()
 
 dec_day = {0:'Понедельник',
            1:'Вторник',
@@ -240,11 +295,9 @@ def __transformations_to_date_visiting(array: list[str]) -> list[list]:
     :param array: массив строк '2023-10-15, 251'
     :return: list[[datatime, int]]
     """
-    if not isinstance(array, list):
-        raise TypeError(f'Не соответствие типа входных данных ожидалось class: list')
+    __check_list(array)
 
-    if not array:
-        raise ValueError(f'Список данных пустой')
+    __check_list_empty(array)
 
     tsf_array = []
 

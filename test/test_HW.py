@@ -29,6 +29,48 @@ def test_function_without_arguments():
     with pytest.raises(TypeError):
         main.output_minimum_number_greatest_repetition()
 
+
+# ******** Задание №3 из презентации ********************************************************
+
+@pytest.mark.parametrize('mass, b, expected',[([1,2,3,4,5,6], 7, [[0,5], [1,4], [2,3]]),
+                                              ([-1,-2,-3,0,-5,1], 7, [[-1, -1]]),
+                                              ([3,3,3,3,3,3,3], 6, [[0,1], [2,3], [4,5]]),
+                                              ([0,-3,0,2,1,3,0,2,-1], 1, [[0,4], [3,8]]),
+                                              ([-1,-3,-2,-2,-1,-3,-3,2,-1], 5, [[-1, -1]]),
+                                              ([-109, 0, 109, 0], 109, [[1, 2]]),
+                                              ([-109, 0, -109, 0], -109, [[0, 1], [2, 3]]),
+                                              ([1,2,3,4,5,6], 13, [[-1, -1]])])
+
+def test_task_N3(mass, b, expected):
+
+    res = main.task_N3(mass, b)
+
+    assert expected == res, f'Ожидали: {expected} получили:{res}'
+
+
+def test_task_N3_argument_not_list():
+
+    with pytest.raises(TypeError):
+        main.task_N3('', -250)
+
+
+def test_task_N3_argument_not_in_interval():
+
+    with pytest.raises(ValueError):
+        main.task_N3([1, 2, 3, 4, 5, 6], -250)
+
+
+def test_task_N3_empty_list():
+
+    with pytest.raises(ValueError):
+        main.task_N3([], -2)
+
+
+def test_task_N3there_is_one_value_in_list():
+
+    with pytest.raises(ValueError):
+        main.task_N3([1], 5)
+
 # ******** Задание №1 ***********************************************************************
 
 @pytest.mark.parametrize('n, expected',
